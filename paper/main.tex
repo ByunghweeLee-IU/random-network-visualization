@@ -1,0 +1,231 @@
+\documentclass[11pt,a4paper]{article}
+
+% Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{natbib}
+\usepackage{geometry}
+\usepackage{caption}
+\usepackage{subcaption}
+
+\geometry{margin=1in}
+
+% Title
+\title{\textbf{Random Network Visualization}\\
+\large Interactive Exploration of Erd\H{o}s-R\'enyi and Barab\'asi-Albert Models}
+\author{Random Networks Project}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+%==============================================================================
+% Abstract
+%==============================================================================
+\begin{abstract}
+This project presents interactive visualization tools for exploring two fundamental random network models: the Erd\H{o}s-R\'enyi (ER) model and the Barab\'asi-Albert (BA) model. We implement animated HTML visualizations that demonstrate network growth dynamics and real-time degree distribution analysis. The ER model generates random graphs with Poisson degree distributions, while the BA model produces scale-free networks through preferential attachment, exhibiting power-law degree distributions. Our implementation uses Python with NetworkX for graph generation and Plotly for interactive visualizations, providing an educational tool for understanding network science fundamentals.
+\end{abstract}
+
+%==============================================================================
+% Introduction
+%==============================================================================
+\section{Introduction}
+
+Random networks are mathematical models used to study the structure and dynamics of complex systems, from social networks to biological systems. Understanding how networks form and evolve is crucial for analyzing phenomena such as information spreading, disease transmission, and system robustness.
+
+\subsection{Erd\H{o}s-R\'enyi Model}
+
+The Erd\H{o}s-R\'enyi (ER) model, introduced by Paul Erd\H{o}s and Alfr\'ed R\'enyi in 1959~\citep{erdos1959random}, is one of the simplest random graph models. In the $G(n,p)$ variant, a graph is constructed by connecting $n$ nodes randomly, where each pair of nodes is connected with probability $p$ independently.
+
+Key properties of ER networks include:
+\begin{itemize}
+    \item The degree distribution follows a Poisson distribution with mean $\lambda = (n-1)p$
+    \item The network exhibits a phase transition at $p = 1/n$, where a giant component emerges
+    \item Average path length scales as $O(\log n)$ for connected networks
+    \item Clustering coefficient is low, approximately equal to $p$
+\end{itemize}
+
+The probability of a node having degree $k$ is given by:
+\begin{equation}
+    P(k) = \binom{n-1}{k} p^k (1-p)^{n-1-k} \approx \frac{\lambda^k e^{-\lambda}}{k!}
+\end{equation}
+
+\subsection{Barab\'asi-Albert Model}
+
+The Barab\'asi-Albert (BA) model, proposed by Albert-L\'aszl\'o Barab\'asi and R\'eka Albert in 1999~\citep{barabasi1999emergence}, generates scale-free networks through a mechanism called preferential attachment. The model captures the ``rich get richer'' phenomenon observed in many real-world networks.
+
+The BA model works as follows:
+\begin{enumerate}
+    \item Start with an initial network of $m_0$ connected nodes
+    \item At each time step, add a new node with $m$ edges
+    \item Connect the new node to existing nodes with probability proportional to their degree
+\end{enumerate}
+
+The preferential attachment probability is:
+\begin{equation}
+    \Pi(k_i) = \frac{k_i}{\sum_j k_j}
+\end{equation}
+
+This mechanism produces networks with power-law degree distributions:
+\begin{equation}
+    P(k) \sim k^{-\gamma}, \quad \gamma = 3
+\end{equation}
+
+Scale-free networks are characterized by the presence of highly connected hub nodes, which play critical roles in network connectivity and robustness.
+
+%==============================================================================
+% Methods
+%==============================================================================
+\section{Methods}
+
+\subsection{Implementation}
+
+The visualization system is implemented in Python using the following libraries:
+\begin{itemize}
+    \item \textbf{NetworkX}: Graph data structures and network analysis algorithms
+    \item \textbf{NumPy}: Numerical computations and array operations
+    \item \textbf{Plotly}: Interactive web-based visualizations
+    \item \textbf{SciPy}: Statistical distributions for theoretical comparisons
+\end{itemize}
+
+\subsection{Network Generation}
+
+For the ER model, we implement the $G(n,p)$ variant where nodes are added sequentially. Each new node is connected to existing nodes with probability $p$, allowing visualization of the network growth process.
+
+For the BA model, we implement preferential attachment where new nodes connect to $m=2$ existing nodes. The connection probability is proportional to node degree, creating the characteristic scale-free structure.
+
+\subsection{Visualization Design}
+
+The visualization system features:
+\begin{itemize}
+    \item \textbf{Interactive network graph}: Spring layout visualization with nodes colored by degree
+    \item \textbf{Animation controls}: Slider and playback buttons for stepping through network growth
+    \item \textbf{Degree distribution plot}: Real-time histogram with theoretical distribution overlay
+    \item \textbf{Dark theme}: Professional styling for clear visualization
+\end{itemize}
+
+\subsection{Degree Distribution Analysis}
+
+For ER networks, we compare empirical degree distributions with the theoretical Poisson distribution. For BA networks, we use logarithmic binning to properly visualize the power-law distribution on log-log scales. The theoretical $P(k) \sim k^{-3}$ line is overlaid for comparison.
+
+The log-binning approach uses geometrically increasing bin widths:
+\begin{equation}
+    \Delta k_i = k_{i+1} - k_i = k_i \cdot (\text{const})
+\end{equation}
+
+This ensures proper probability density estimation across the wide range of degrees in scale-free networks.
+
+%==============================================================================
+% Results
+%==============================================================================
+\section{Results}
+
+\subsection{Erd\H{o}s-R\'enyi Network}
+
+Figure~\ref{fig:er_network} shows the ER network visualization with $n=500$ nodes and edge probability $p=0.008$. The degree distribution closely follows a Poisson distribution with mean $\lambda \approx 4$.
+
+\begin{figure}[htbp]
+    \centering
+    \fbox{\parbox{0.8\textwidth}{\centering
+        \textit{ER Network Visualization}\\[1em]
+        Interactive HTML visualization showing:\\
+        - Network graph with 500 nodes\\
+        - Poisson degree distribution\\
+        - Animation controls for growth visualization
+    }}
+    \caption{Erd\H{o}s-R\'enyi network visualization. The left panel shows the network graph with nodes colored by degree. The right panel displays the degree distribution with empirical data points and theoretical Poisson curve.}
+    \label{fig:er_network}
+\end{figure}
+
+Key observations:
+\begin{itemize}
+    \item Nodes have similar degrees, clustered around the mean
+    \item No significant hub structure emerges
+    \item The network appears relatively homogeneous
+\end{itemize}
+
+\subsection{Barab\'asi-Albert Network}
+
+Figure~\ref{fig:ba_network} shows the BA network visualization with $n=500$ nodes and $m=2$ edges per new node. The degree distribution exhibits clear power-law behavior with exponent $\gamma \approx 3$.
+
+\begin{figure}[htbp]
+    \centering
+    \fbox{\parbox{0.8\textwidth}{\centering
+        \textit{BA Network Visualization}\\[1em]
+        Interactive HTML visualization showing:\\
+        - Scale-free network graph with 500 nodes\\
+        - Power-law degree distribution ($P(k) \sim k^{-3}$)\\
+        - Hub nodes with high connectivity
+    }}
+    \caption{Barab\'asi-Albert network visualization. The left panel shows the scale-free network with prominent hub nodes. The right panel displays the log-binned degree distribution with the theoretical power-law line.}
+    \label{fig:ba_network}
+\end{figure}
+
+Key observations:
+\begin{itemize}
+    \item Clear hub structure with highly connected nodes
+    \item Majority of nodes have low degree
+    \item Power-law distribution spans multiple orders of magnitude
+    \item Early nodes tend to become hubs (first-mover advantage)
+\end{itemize}
+
+\subsection{Comparison}
+
+Table~\ref{tab:comparison} summarizes the key differences between the two models.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Comparison of ER and BA network models}
+    \label{tab:comparison}
+    \begin{tabular}{lcc}
+        \toprule
+        \textbf{Property} & \textbf{ER Model} & \textbf{BA Model} \\
+        \midrule
+        Degree distribution & Poisson & Power-law \\
+        Hub structure & Absent & Present \\
+        Growth mechanism & Random attachment & Preferential attachment \\
+        Characteristic exponent & N/A & $\gamma = 3$ \\
+        Network type & Homogeneous & Scale-free \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+%==============================================================================
+% References
+%==============================================================================
+\bibliographystyle{plainnat}
+\begin{thebibliography}{9}
+
+\bibitem[Erd\H{o}s and R\'enyi(1959)]{erdos1959random}
+Erd\H{o}s, P. and R\'enyi, A. (1959).
+\newblock On random graphs I.
+\newblock \emph{Publicationes Mathematicae Debrecen}, 6:290--297.
+
+\bibitem[Barab\'asi and Albert(1999)]{barabasi1999emergence}
+Barab\'asi, A.-L. and Albert, R. (1999).
+\newblock Emergence of scaling in random networks.
+\newblock \emph{Science}, 286(5439):509--512.
+
+\bibitem[Newman(2003)]{newman2003structure}
+Newman, M. E. J. (2003).
+\newblock The structure and function of complex networks.
+\newblock \emph{SIAM Review}, 45(2):167--256.
+
+\bibitem[Albert and Barab\'asi(2002)]{albert2002statistical}
+Albert, R. and Barab\'asi, A.-L. (2002).
+\newblock Statistical mechanics of complex networks.
+\newblock \emph{Reviews of Modern Physics}, 74(1):47--97.
+
+\bibitem[Watts and Strogatz(1998)]{watts1998collective}
+Watts, D. J. and Strogatz, S. H. (1998).
+\newblock Collective dynamics of `small-world' networks.
+\newblock \emph{Nature}, 393(6684):440--442.
+
+\end{thebibliography}
+
+\end{document}
