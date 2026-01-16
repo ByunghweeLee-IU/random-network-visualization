@@ -1,75 +1,77 @@
-# Project template
+# Random Networks Visualization
 
-A simple template for research project repos. You can also use [data science and reproducible science cookie cutters](https://github.com/audreyr/cookiecutter#data-science).
+Interactive visualization tools for exploring random network models. This project generates animated HTML visualizations showing network growth and degree distributions for two fundamental random graph models:
 
-## Project structure
+- **Erdos-Renyi (ER) Model**: Random graphs where edges are created with fixed probability p
+- **Barabasi-Albert (BA) Model**: Scale-free networks grown via preferential attachment
 
-This template contains the following folders and files. See `README.md` in each folder for more details and guidelines.
+## Features
 
-1. `src` for project source code (installed as editable package).
-1. `tests` for unit tests.
-1. `data` for raw & derived datasets.
-1. `libs` for third-party or vendored packages.
-1. `models` for trained models.
-1. `notebooks` for (timestamped) experiment notebooks.
-1. `paper` for manuscripts.
-1. `results` for results (figures, tables, etc.)
-1. `workflow` for workflow files and scripts.
-1. `.gitignore` for temporary and binary files to be ignored by git (LaTeX, Python, Jupyter, data files, etc.)
+- Animated network growth visualization with interactive slider controls
+- Real-time degree distribution plots
+- Theoretical distribution overlays (Poisson for ER, power-law for BA)
+- Dark theme professional styling
+- Exportable standalone HTML files
 
-## Python environment
+## Installation
 
-This template uses [uv](https://docs.astral.sh/uv/) for Python environment management. Run the setup script for initial configuration:
+### Using pip
 
-```sh
-./setup.sh          # Install dependencies and configure environment
+```bash
+pip install -r requirements.txt
 ```
 
-### Key files
+### Using uv (recommended)
 
-- `.python-version` — specifies the required Python release
-- `.venv/` — virtual environment directory (created by uv)
-- `pyproject.toml` — project metadata and dependency declarations
-- `uv.lock` — reproducible dependency snapshot (commit to version control)
-- `.envrc` — [direnv](https://direnv.net/) configuration for automatic venv activation
-
-### Common commands
-
-```sh
-uv add PACKAGE      # Add dependency
-uv sync             # Install from lockfile
-uv run script.py    # Run script in virtual environment
+```bash
+uv sync
 ```
 
-See [Python environment setup](https://yyahn.com/wiki/Python/Environment%20setup/) for details.
+## Usage
 
-## Linting and formatting
+### Generate Barabasi-Albert Network Visualization
 
-[ruff](https://docs.astral.sh/ruff/) is included as a dev dependency. VS Code settings (`.vscode/settings.json`) enable format on save.
-
-### Pre-commit hooks
-
-Install hooks to auto-run ruff and tests before commits:
-
-```sh
-uv add --dev pre-commit
-uv run pre-commit install
+```bash
+python src/random_networks/ba_network_viz.py
 ```
 
-## For AI coding agents
+This generates `ba_network.html` showing scale-free network growth with preferential attachment. The degree distribution follows a power-law P(k) ~ k^(-3).
 
-Use the following instructions to initialize. 
+### Generate Erdos-Renyi Network Visualization
 
-Commands:
-- `uv sync` — install dependencies
-- `uv run pytest` — run tests
-- `uv run ruff check .` — lint
-- `uv run ruff format .` — format
-- `make all` — run Snakemake pipeline
+```bash
+python src/random_networks/er_network_viz.py
+```
 
-Conventions:
-- Write clean code accompanied by well-designed tests. 
-- Use type hints for all function signatures. 
-- Import project code as `from project_name import ...`. 
-- Put reusable code in `src/`, not in notebooks or workflow scripts. 
-- Timestamp experiment folders: `YYYYMMDD_description`. 
+This generates `er_network.html` showing random network growth. The degree distribution follows a Poisson distribution.
+
+## Output
+
+Generated HTML files are saved in the `results/` folder. Open them in any web browser to interact with the visualizations:
+
+- Use the slider to step through network growth
+- Use playback controls (Pause, 1x, 2x, 4x) for animation
+- Hover over nodes to see degree information
+
+## Project Structure
+
+```
+random-networks/
+├── src/random_networks/     # Source code
+│   ├── ba_network_viz.py    # Barabasi-Albert visualization
+│   └── er_network_viz.py    # Erdos-Renyi visualization
+├── results/                 # Generated HTML visualizations
+├── requirements.txt         # Python dependencies
+└── pyproject.toml          # Project configuration
+```
+
+## Dependencies
+
+- networkx: Graph creation and analysis
+- numpy: Numerical computations
+- plotly: Interactive visualizations
+- scipy: Statistical distributions
+
+## License
+
+MIT
